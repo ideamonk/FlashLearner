@@ -3,10 +3,23 @@
 #                                                             ideamonk gmail.com
 import os
 import sys
-import pygame
+import random
+
+try:
+    import pygame
+except ImportError:
+    print "You need python-pygame installed on your device."
+    exit(0)
+
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
+
 
 WIDTH = 800
 HEIGHT = 480
+expansions = { "n":"noun", "aj":"adjective", "v":"verb" }
 
 if __name__ == '__main__':
     # setup display
@@ -26,7 +39,9 @@ if __name__ == '__main__':
 
     # Load wordlist
     # Show loading...
-    font = pygame.font.Font(os.path.join ("./ui","lily.ttf"), 36)
+    font = pygame.font.Font(os.path.join ("./ui","lily.ttf"), 76)
+    medfont = pygame.font.Font(os.path.join ("./ui","lily.ttf"), 32)
+    smallfont = pygame.font.Font(os.path.join ("./ui","lily.ttf"), 24)
     text = font.render("loading...", 1, (10, 10, 10))
     textpos = text.get_rect(centerx=WIDTH/2,centery=HEIGHT/2)
     mybuffer.blit(text, textpos)
@@ -47,8 +62,64 @@ if __name__ == '__main__':
     screen.blit(mybuffer,(0,0))
     pygame.display.flip()
 
-    
+    # load settings from pickler
+    settings_file = os.path.join ("./settings/","flr_settings")
+    if os.path.exists(settings_file):
+        flr_settings = pickle.load(open(settings_file))
+    else:
+        # make one and store
+        flr_settings = {'delay':20}
+        pickle.dump(flr_settings, open(settings_file, 'w'))
 
+    wordnumber = random.randint (0,len(wordlist)-1)
+    while True:
+        
+        mybuffer.blit (paper_layer,(0,0))
+        # ---------------------------------------------------------------------/
 
+        # draw word
+        text = font.render(wordlist[wordnumber][1], 1, (0, 0, 0))
+        textpos = text.get_rect(centerx=WIDTH/2,centery=180)
+        mybuffer.blit(text, textpos)
+        
+        # draw type
+        try:
+            text = medfont.render(expansions[wordlist[wordnumber][0]], 1, (85, 85, 85))
+            textpos = text.get_rect(x=110,centery=80)
+            mybuffer.blit(text, textpos)
+        except:
+            ''' don't draw '''
+        
+        # process mouse events
+        pygame.event.get()
+        if (pygame.mouse.get_pressed()[0]):
+            if (pygame.mouse.get_pos()[1]>50):
+                wordnumber = random.randint (0,len(wordlist)-1)
+                torender = wordlist[wordnumber][2][:-1]
+                if (len(torender)<40):
+                    text = smallfont.render(torender, 1, (0, 0, 0))
+                    textpos = text.get_rect(centerx=WIDTH/2,centery=260)
+                    mybuffer.blit(text, textpos)
+                else:
+                    todolist=torender.split()
+                    todoindex = 0
+                    todo_y = 260
+                    torender = ""
+                    while (todoindex<len(todolist)):
+                        torender += todolist[todoindex]+" "
+                        if (len(torender)>40):
+                            text = smallfont.render(torender, 1, (0, 0, 0))
+                            textpos = text.get_rect(centerx=WIDTH/2,centery=todo_y)
+                            mybuffer.blit(text, textpos)
+                            torender = ""
+                            todo_y+=smallfont.get_height() + 5 # offset gap
+                            
+                        todoindex+=1
+
+        # ---------------------------------------------------------------------\
+        screen.blit(mybuffer,(0,0))
+        pygame.display.flip()
+        pygame.time.wait (flr_settings['delay']*1) # :) superfast regression testing
+        
     raw_input()
    
