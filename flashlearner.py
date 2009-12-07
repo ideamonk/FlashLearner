@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # FlashLearner - a Flash Card based learning tool for Maemo
 #                                                             ideamonk gmail.com
+# Mon Dec  7 12:45:45 IST 2009
 import os
 import sys
 import random
@@ -20,12 +21,10 @@ except ImportError:
 WIDTH = 800
 HEIGHT = 480
 expansions = { "n":"noun", "aj":"adjective", "v":"verb" }
-dontChange = 0
 
 def randomizeWord():
     global wordnumber
-    if (dontChange==0):
-        wordnumber = random.randint (0,len(wordlist)-1)
+    wordnumber = random.randint (0,len(wordlist)-1)
     
 if __name__ == '__main__':
     global wordnumber
@@ -76,13 +75,13 @@ if __name__ == '__main__':
         flr_settings = pickle.load(open(settings_file))
     else:
         # make one and store
-        flr_settings = {'delay':20}
+        flr_settings = {'delay':15}
         pickle.dump(flr_settings, open(settings_file, 'w'))
 
-    pygame.time.set_timer(pygame.USEREVENT+1, flr_settings['delay']*100)
+    pygame.time.set_timer(pygame.USEREVENT+1, flr_settings['delay']*1000)
+    
     wordnumber = random.randint (0,len(wordlist)-1)
     while True:
-        
         mybuffer.blit (paper_layer,(0,0))
         # ---------------------------------------------------------------------/
 
@@ -98,18 +97,12 @@ if __name__ == '__main__':
             mybuffer.blit(text, textpos)
         except:
             ''' don't draw '''
-        
-        # process mouse events
-        for event in pygame.event.get():
-            if event.type == pygame.USEREVENT+1:
-                randomizeWord()
-            if event.type == pygame.QUIT:
-                break
-
+            
         dontChange = 0
+        
+        events = pygame.event.get()
         if (pygame.mouse.get_pressed()[0]):
             if (pygame.mouse.get_pos()[1]>50):
-                wordnumber = random.randint (0,len(wordlist)-1)
                 dontChange = 1
                 torender = wordlist[wordnumber][2][:-1]
                 if (len(torender)<40):
@@ -131,10 +124,48 @@ if __name__ == '__main__':
                             todo_y+=smallfont.get_height() + 5 # offset gap
                             
                         todoindex+=1
+            elif (pygame.mouse.get_pos()[0]<136 and pygame.mouse.get_pos()[1]<48):
+                # skip word
+                wordnumber = random.randint (0,len(wordlist)-1)
+            elif (pygame.mouse.get_pos()[0]<527 and pygame.mouse.get_pos()[0]>348 and pygame.mouse.get_pos()[1]<48):
+                # process settings menu
+                mybuffer.blit (settings_layer,(0,0))
+                screen.blit(mybuffer,(0,0))
+                pygame.display.flip()
+                
+                pygame.event.clear()
+                pygame.time.wait(200)
+                pygame.event.clear()
+                
+                while True:
+                    mybuffer.blit (settings_layer,(0,0))
+                    # ---------------------------------------------------------/
+                    #752,82 68x68
+                    pygame.event.get()
+                    if (pygame.mouse.get_pressed()[0]):
+                        mouse_x, mouse_y = pygame.mouse.get_pos()
+                        if ((mouse_x>752-68 and mouse_x<752 and mouse_y>82 and mouse_y<82+68) or
+                            (mouse_x<115 or mouse_y<76 or mouse_x>753 or mouse_y>254)):
+                                break
+
+                        # TODO process settings here, picke back to file for reload
+                    # ---------------------------------------------------------\
+                    screen.blit(mybuffer,(0,0))
+                    pygame.display.flip()
+                
+            elif (pygame.mouse.get_pos()[0]>726 and pygame.mouse.get_pos()[1]<48):
+                exit(0)
+
+        # process mouse events
+        for event in events:
+            if (event.type == pygame.USEREVENT+1 and dontChange != 1):
+                randomizeWord()
+            if event.type == pygame.QUIT:
+                break
 
         # ---------------------------------------------------------------------\
         screen.blit(mybuffer,(0,0))
         pygame.display.flip()
         
     raw_input()
-   
+    
