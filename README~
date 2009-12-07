@@ -1,0 +1,42 @@
+FlashLearner 0.1 for Maemo
+==========================
+                                                    Mon Dec  7 12:45:45 IST 2009
+
+Introduction -
+--------------
+
+FlashLearner is a Flash Card Application which aids you in learning by flashing
+words and their type from a chosen wordlist. Not only does it flash words, when
+you touch the screen of your device, it shows you the definition.
+
+As such you go through the followind learning process - 
+
+     [** Word Flashes **]     
+			|		|    you know it
+			|		\--------------------> 	[SKIP]
+            |                |
+            |                \-----------> 	[YOU RECALL IN MIND]
+			|
+            |
+			|     you don't know
+			\----------------------------> 	[TOUCH TO LEARN]
+
+
+
+Dependencies -
+--------------
+
+	* Python2.5
+	* PyGame - armel binaries
+
+
+
+Testing -
+---------
+
+	All you need is Python2.5+ and PyGame to test it on your system.
+	To run on scratchbox, get python-sdk onto it.
+
+	NOTES: Just do a functional testing on maemo-sdk, due to poor
+ 	performance, it's not suggested to use it for actual UX testing. 
+
