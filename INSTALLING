@@ -1,0 +1,18 @@
+FlashLearner 0.1 for Maemo
+==========================
+                                                    Sun Dec  6 11:55:45 IST 2009
+
+To install on a Nokia N900, make sure you got python2.5
+
+Goto the terminal on your device,
+
+    Get Pygame -
+    
+        $ wget http://repository.maemo.org/extras-devel/pool/fremantle/free/p/pygame/python-pygame_1.8.1release-0maemo1_armel.deb
+        $ fakeroot dpkg -i python-pygame_1.8.1release-0maemo1_armel.deb
+
+    Running FlashLearner -
+
+        $ cd flashlearner-0.1
+        $ python2.5 ./flashlearner.py
+        
