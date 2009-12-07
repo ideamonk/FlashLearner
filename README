@@ -40,3 +40,10 @@ Testing -
 	NOTES: Just do a functional testing on maemo-sdk, due to poor
  	performance, it's not suggested to use it for actual UX testing. 
 
+
+
+TODO -
+------
+
+    * Read/Write/Use the settings
+    * Complete UI gaps
