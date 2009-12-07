@@ -20,8 +20,16 @@ except ImportError:
 WIDTH = 800
 HEIGHT = 480
 expansions = { "n":"noun", "aj":"adjective", "v":"verb" }
+dontChange = 0
 
+def randomizeWord():
+    global wordnumber
+    if (dontChange==0):
+        wordnumber = random.randint (0,len(wordlist)-1)
+    
 if __name__ == '__main__':
+    global wordnumber
+    
     # setup display
     pygame.init()
     pygame.font.init()
@@ -40,8 +48,8 @@ if __name__ == '__main__':
     # Load wordlist
     # Show loading...
     font = pygame.font.Font(os.path.join ("./ui","lily.ttf"), 76)
-    medfont = pygame.font.Font(os.path.join ("./ui","lily.ttf"), 32)
-    smallfont = pygame.font.Font(os.path.join ("./ui","lily.ttf"), 24)
+    medfont = pygame.font.Font(os.path.join ("./ui","lily.ttf"), 34)
+    smallfont = pygame.font.Font(os.path.join ("./ui","lily.ttf"), 28)
     text = font.render("loading...", 1, (10, 10, 10))
     textpos = text.get_rect(centerx=WIDTH/2,centery=HEIGHT/2)
     mybuffer.blit(text, textpos)
@@ -71,6 +79,7 @@ if __name__ == '__main__':
         flr_settings = {'delay':20}
         pickle.dump(flr_settings, open(settings_file, 'w'))
 
+    pygame.time.set_timer(pygame.USEREVENT+1, flr_settings['delay']*100)
     wordnumber = random.randint (0,len(wordlist)-1)
     while True:
         
@@ -91,10 +100,16 @@ if __name__ == '__main__':
             ''' don't draw '''
         
         # process mouse events
-        pygame.event.get()
+        for event in pygame.event.get():
+            if event.type == pygame.USEREVENT+1:
+                randomizeWord()
+            if event.type == pygame.QUIT:
+                break
+
+        dontChange = 0
         if (pygame.mouse.get_pressed()[0]):
             if (pygame.mouse.get_pos()[1]>50):
-                wordnumber = random.randint (0,len(wordlist)-1)
+                dontChange = 1
                 torender = wordlist[wordnumber][2][:-1]
                 if (len(torender)<40):
                     text = smallfont.render(torender, 1, (0, 0, 0))
@@ -119,7 +134,6 @@ if __name__ == '__main__':
         # ---------------------------------------------------------------------\
         screen.blit(mybuffer,(0,0))
         pygame.display.flip()
-        pygame.time.wait (flr_settings['delay']*1) # :) superfast regression testing
         
     raw_input()
    
