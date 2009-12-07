@@ -47,9 +47,9 @@ if __name__ == '__main__':
 
     # Load wordlist
     # Show loading...
-    font = pygame.font.Font(os.path.join ("./ui","lily.ttf"), 76)
-    medfont = pygame.font.Font(os.path.join ("./ui","lily.ttf"), 34)
-    smallfont = pygame.font.Font(os.path.join ("./ui","lily.ttf"), 28)
+    font = pygame.font.Font(os.path.join ("./ui","lily.ttf"), 84)
+    medfont = pygame.font.Font(os.path.join ("./ui","lily.ttf"), 50)
+    smallfont = pygame.font.Font(os.path.join ("./ui","lily.ttf"), 34)
     text = font.render("loading...", 1, (10, 10, 10))
     textpos = text.get_rect(centerx=WIDTH/2,centery=HEIGHT/2)
     mybuffer.blit(text, textpos)
@@ -109,6 +109,7 @@ if __name__ == '__main__':
         dontChange = 0
         if (pygame.mouse.get_pressed()[0]):
             if (pygame.mouse.get_pos()[1]>50):
+                wordnumber = random.randint (0,len(wordlist)-1)
                 dontChange = 1
                 torender = wordlist[wordnumber][2][:-1]
                 if (len(torender)<40):

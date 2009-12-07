@@ -47,9 +47,9 @@ if __name__ == '__main__':
 
     # Load wordlist
     # Show loading...
-    font = pygame.font.Font(os.path.join ("./ui","lily.ttf"), 76)
-    medfont = pygame.font.Font(os.path.join ("./ui","lily.ttf"), 34)
-    smallfont = pygame.font.Font(os.path.join ("./ui","lily.ttf"), 24)
+    font = pygame.font.Font(os.path.join ("./ui","lily.ttf"), 84)
+    medfont = pygame.font.Font(os.path.join ("./ui","lily.ttf"), 50)
+    smallfont = pygame.font.Font(os.path.join ("./ui","lily.ttf"), 34)
     text = font.render("loading...", 1, (10, 10, 10))
     textpos = text.get_rect(centerx=WIDTH/2,centery=HEIGHT/2)
     mybuffer.blit(text, textpos)
